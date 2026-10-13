@@ -1,0 +1,179 @@
+
+
+* { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 30px 16px;
+            background: #f1f5f9;
+            color: #172033;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .actions {
+            max-width: 800px;
+            margin: 0 auto 18px;
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 8px;
+            border: 0;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .primary { background: #2563eb; color: #fff; }
+        .secondary { background: #e2e8f0; color: #172033; }
+
+        .receipt {
+            max-width: 800px;
+            margin: auto;
+            padding: 38px;
+            background: white;
+            border: 1px solid #dbe3ed;
+            border-radius: 12px;
+        }
+
+        .school-header {
+            text-align: center;
+            padding-bottom: 22px;
+            border-bottom: 2px solid #172033;
+        }
+
+        .school-header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .school-header p {
+            margin: 5px 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .receipt-title {
+            margin: 24px 0;
+            text-align: center;
+            font-size: 19px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .receipt-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .meta-item {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 6px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .value {
+            font-size: 14px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .section-title {
+            margin: 24px 0 10px;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 13px 12px;
+            border: 1px solid #dbe3ed;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th { background: #f8fafc; }
+
+        .amount-row td {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .amount {
+            color: #15803d;
+        }
+
+        .note {
+            margin-top: 20px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 65px;
+        }
+
+        .signature {
+            padding-top: 10px;
+            border-top: 1px solid #64748b;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .receipt { padding: 20px; }
+            .school-header h1 { font-size: 22px; }
+            .receipt-meta { grid-template-columns: 1fr; }
+            .signatures { gap: 20px; }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .actions { display: none !important; }
+
+            .receipt {
+                max-width: none;
+                margin: 0;
+                padding: 10px;
+                border: 0;
+                border-radius: 0;
+            }
+
+            .meta-item, th, td {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }

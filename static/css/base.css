@@ -1,0 +1,5 @@
+/* SchoolPro shared styles. Page-specific rules live in static/css/pages/. */
+:root{color-scheme:light;--sp-primary:#4f46e5;--sp-text:#172033;--sp-muted:#64748b;--sp-bg:#f5f7fb;--sp-border:#e2e8f0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--sp-text);font-family:Inter,"Segoe UI",Arial,sans-serif}a{transition:color .15s ease,background-color .15s ease}img{max-width:100%}button,input,select,textarea{font:inherit}
+.sp-site-header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 5%;background:#fff;border-bottom:1px solid var(--sp-border)}.sp-site-brand{font-weight:800;text-decoration:none;color:var(--sp-text)}.sp-site-footer{padding:20px 5%;color:var(--sp-muted);font-size:14px}
+@media(max-width:640px){.sp-site-header{align-items:flex-start;flex-wrap:wrap}}

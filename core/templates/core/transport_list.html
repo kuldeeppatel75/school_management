@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Transport | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_transport_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="wrap"><a href="{% url 'portal' %}">← Principal Dashboard</a><h1>Transport Management</h1><p><a class="btn" href="{% url 'transport_create' %}">＋ Add Transport Record</a> <a class="btn" href="{% url 'transport_payment_create' %}">＋ Record Transport Payment</a></p><div class="card"><form method="get"><input name="q" value="{{ q }}" placeholder="Student, admission no. or route"><label>Month <input type="month" name="month" value="{{ month }}"></label><button>Search</button></form><div class="scroll"><table><thead><tr><th>Admission No.</th><th>Student</th><th>Class</th><th>Route</th><th>Vehicle</th><th>Monthly Charge</th><th>Paid This Month</th><th>Remaining This Month</th><th>Start Date</th></tr></thead><tbody>{% for row in records %}{% with r=row.record %}<tr><td>{{ r.student.admission_number }}</td><td>{{ r.student.full_name }}</td><td>{{ r.student.student_class }}-{{ r.student.section }}</td><td>{{ r.route_name }}</td><td>{{ r.vehicle_number|default:"—" }}</td><td>₹{{ r.monthly_charge|floatformat:2 }}</td><td>₹{{ row.paid|floatformat:2 }}</td><td>₹{{ row.balance|floatformat:2 }}</td><td>{{ r.start_date }}</td></tr>{% endwith %}{% empty %}<tr><td colspan="9">No transport records. Add a record to get started.</td></tr>{% endfor %}</tbody></table></div></div></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

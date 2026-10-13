@@ -1,0 +1,26 @@
+
+
+@media print {
+    nav, header, footer, .btn, form {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+    }
+}

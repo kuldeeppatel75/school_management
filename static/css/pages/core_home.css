@@ -1,0 +1,6 @@
+
+
+.hero{min-height:600px;position:relative;isolation:isolate;background:linear-gradient(90deg,rgba(10,18,42,.92),rgba(10,18,42,.55)),url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=2000&q=85') center/cover;color:white}
+.hero h1,.hero-content>p,.hero .trust-row{color:white}.hero h1 span{color:#a5b4fc}.hero .eyebrow{color:#c7d2fe}
+.hero .dashboard-preview{color:#172033}.school-logo{width:44px;height:44px;border-radius:13px;object-fit:cover;background:#4f46e5}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:60px}.navbar nav{display:none}}

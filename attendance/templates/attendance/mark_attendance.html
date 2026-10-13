@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Attendance Management | SchoolPro{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{% static 'css/pages/attendance_mark_attendance.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+
+    <!-- Top navigation -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div>
+                <h2>SchoolPro</h2>
+                <p>Smart School Management</p>
+            </div>
+        </div>
+
+        <a href="/" class="back-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Home
+        </a>
+    </header>
+
+    <!-- Page heading -->
+    <section class="page-heading">
+        <h1>Attendance Management</h1>
+        <p>Manage daily student attendance with ease and accuracy.</p>
+    </section>
+
+    <!-- Django messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show message-alert"
+                 role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Summary cards -->
+    <section class="row g-3">
+        <div class="col-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Students</span>
+                    <span class="stat-icon total-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ total_students }}</div>
+                <div class="stat-note">Students in selected class</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Present</span>
+                    <span class="stat-icon present-icon">
+                        <i class="bi bi-person-check-fill"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ present_count }}</div>
+                <div class="stat-note">Marked present for this date</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Absent</span>
+                    <span class="stat-icon absent-icon">
+                        <i class="bi bi-person-x-fill"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ absent_count }}</div>
+                <div class="stat-note">Marked absent for this date</div>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">On Leave</span>
+                    <span class="stat-icon leave-icon">
+                        <i class="bi bi-calendar2-minus-fill"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ leave_count }}</div>
+                <div class="stat-note">Marked on leave for this date</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <h3><i class="bi bi-sliders2 me-2 text-primary"></i>Attendance Filters</h3>
+                <p>Select class, section and date to load students.</p>
+            </div>
+        </div>
+
+        <div class="filter-body">
+            <form method="get" action="{% url 'attendance:mark_attendance' %}">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-12 col-md-4">
+                        <label for="student_class" class="form-label">
+                            CLASS
+                        </label>
+                        <select name="student_class" id="student_class"
+                                class="form-select" required>
+                            <option value="">Select class</option>
+                            {% for class_name in classes %}
+                                <option value="{{ class_name }}"
+                                    {% if selected_class == class_name %}selected{% endif %}>
+                                    Class {{ class_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="section" class="form-label">
+                            SECTION
+                        </label>
+                        <select name="section" id="section"
+                                class="form-select" required>
+                            <option value="">Select section</option>
+                            {% for section_name in sections %}
+                                <option value="{{ section_name }}"
+                                    {% if selected_section == section_name %}selected{% endif %}>
+                                    Section {{ section_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label for="attendance_date" class="form-label">
+                            ATTENDANCE DATE
+                        </label>
+                        <input type="date" name="attendance_date"
+                               id="attendance_date" class="form-control"
+                               value="{{ selected_date }}" required>
+                    </div>
+
+                    <div class="col-12 col-md-2">
+                        <button type="submit"
+                                class="btn btn-primary-custom w-100">
+                            <i class="bi bi-search me-1"></i> Load
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Student attendance table -->
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <h3><i class="bi bi-clipboard2-check me-2 text-primary"></i>Student Attendance</h3>
+                <p>Choose a status for every student, then save the attendance.</p>
+            </div>
+
+            {% if selected_class and selected_section %}
+                <span class="badge rounded-pill text-bg-light border px-3 py-2">
+                    Class {{ selected_class }} · Section {{ selected_section }}
+                </span>
+            {% endif %}
+        </div>
+
+        {% if selected_class and selected_section %}
+
+            {% if student_rows %}
+                <form method="post"
+                      action="{% url 'attendance:mark_attendance' %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="student_class"
+                           value="{{ selected_class }}">
+                    <input type="hidden" name="section"
+                           value="{{ selected_section }}">
+                    <input type="hidden" name="attendance_date"
+                           value="{{ selected_date }}">
+
+                    <div class="table-responsive">
+                        <table class="table attendance-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 65px;">S.No.</th>
+                                    <th>Student Details</th>
+                                    <th>Class / Section</th>
+                                    <th>Attendance Status</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for row in student_rows %}
+                                    <tr>
+                                        <td class="text-secondary fw-semibold">
+                                            {{ forloop.counter }}
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="student-avatar">
+                                                    {{ row.student.full_name|first|upper }}
+                                                </div>
+                                                <div>
+                                                    <div class="student-name">
+                                                        {{ row.student.full_name }}
+                                                    </div>
+                                                    <div class="admission-no">
+                                                        Admission No:
+                                                        {{ row.student.admission_number }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="fw-semibold">
+                                                {{ row.student.student_class }}
+                                            </div>
+                                            <div class="text-secondary small">
+                                                Section {{ row.student.section }}
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <select
+                                                name="status_{{ row.student.id }}"
+                                                class="form-select status-select"
+                                                aria-label="Attendance status for {{ row.student.full_name }}"
+                                                required>
+                                                <option value="PRESENT"
+                                                    {% if row.attendance.status == "PRESENT" or not row.attendance %}selected{% endif %}>
+                                                    Present
+                                                </option>
+                                                <option value="ABSENT"
+                                                    {% if row.attendance.status == "ABSENT" %}selected{% endif %}>
+                                                    Absent
+                                                </option>
+                                                <option value="LEAVE"
+                                                    {% if row.attendance.status == "LEAVE" %}selected{% endif %}>
+                                                    Leave
+                                                </option>
+                                            </select>
+                                        </td>
+
+                                        <td>
+                                            <input type="text"
+                                                   name="remarks_{{ row.student.id }}"
+                                                   class="form-control remarks-input"
+                                                   maxlength="255"
+                                                   placeholder="Optional remarks"
+                                                   value="{{ row.attendance.remarks|default:'' }}">
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <p>
+                            <i class="bi bi-info-circle me-1"></i>
+                            {{ total_students }} student(s) loaded for
+                            {{ selected_date }}. Review each status before saving.
+                        </p>
+
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="bi bi-check2-circle me-2"></i>
+                            Save Attendance
+                        </button>
+                    </div>
+                </form>
+
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h4>No Students Found</h4>
+                    <p>
+                        No active students were found in this class and section.
+                        Add students or check your selected filters.
+                    </p>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-calendar2-week"></i>
+                </div>
+                <h4>Select Class, Section and Date</h4>
+                <p>
+                    Choose the class, section and attendance date above,
+                    then click Load to display the students.
+                </p>
+            </div>
+        {% endif %}
+    </section>
+
+    <footer class="footer-note">
+        SchoolPro · Student Attendance Management
+    </footer>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Update the available sections when the class changes.
+    const classSelect = document.getElementById("student_class");
+    const sectionSelect = document.getElementById("section");
+
+    classSelect.addEventListener("change", function () {
+        sectionSelect.value = "";
+        sectionSelect.disabled = true;
+
+        const form = classSelect.closest("form");
+        const dateInput = document.getElementById("attendance_date");
+
+        // Load sections belonging to the selected class.
+        const params = new URLSearchParams();
+        params.set("student_class", classSelect.value);
+        params.set("attendance_date", dateInput.value);
+
+        if (classSelect.value) {
+            window.location.href =
+                "{% url 'attendance:mark_attendance' %}?" +
+                params.toString();
+        } else {
+            sectionSelect.disabled = false;
+        }
+    });
+
+    // Color the status selector based on its current value.
+    document.querySelectorAll(".status-select").forEach(function (select) {
+        function updateStatusColor() {
+            select.classList.remove(
+                "status-present",
+                "status-absent",
+                "status-leave"
+            );
+
+            if (select.value === "PRESENT") {
+                select.classList.add("status-present");
+            } else if (select.value === "ABSENT") {
+                select.classList.add("status-absent");
+            } else if (select.value === "LEAVE") {
+                select.classList.add("status-leave");
+            }
+        }
+
+        select.addEventListener("change", updateStatusColor);
+        updateStatusColor();
+    });
+</script>
+{% endblock %}

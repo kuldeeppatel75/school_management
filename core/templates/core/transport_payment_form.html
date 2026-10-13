@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Transport Payment | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_transport_payment_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="wrap"><a href="{% url 'transport_list' %}">← Transport</a><div class="card"><h1>Record Transport Payment</h1><p>Payment is capped at the selected student's remaining charge for that month.</p>{% if error %}<p class="error">{{ error }}</p>{% endif %}<form method="post">{% csrf_token %}<div class="field"><label>Student transport record</label><select name="transport_record" required><option value="">Select student / route</option>{% for r in records %}<option value="{{ r.pk }}">{{ r.student.full_name }} — {{ r.route_name }} (₹{{ r.monthly_charge }}/month)</option>{% endfor %}</select></div><div class="field"><label>Month</label><input type="month" name="month" value="{{ month }}" required></div><div class="field"><label>Amount paid</label><input type="number" name="amount" min="0.01" step="0.01" required></div><div class="field"><label>Payment date</label><input type="date" name="payment_date" value="{{ today }}" required></div><div class="field"><label>Method</label><select name="method"><option value="CASH">Cash</option><option value="UPI">UPI</option><option value="BANK">Bank Transfer</option><option value="CHEQUE">Cheque</option></select></div><div class="field"><label>Reference</label><input name="reference"></div><div class="field"><label>Remarks</label><input name="remarks"></div><button class="btn">Save Transport Payment</button></form></div></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

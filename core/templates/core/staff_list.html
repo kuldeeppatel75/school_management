@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Staff | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_staff_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="wrap"><a href="{% url 'portal' %}">← Principal Dashboard</a><h1>Staff & Salary Management</h1>{% if messages %}{% for message in messages %}<p style="background:#ecfdf5;color:#065f46;padding:12px 14px;border-radius:9px">{{ message }}</p>{% endfor %}{% endif %}<p class="muted">Salary details are restricted to the Principal.</p><p><a class="btn" href="{% url 'salary_dashboard' %}">Monthly Salary Summary</a> <a class="btn" href="{% url 'salary_payment_create' %}">Record Salary Payment</a> <a class="btn" href="{% url 'staff_create' %}">＋ Add Staff Member</a></p><div class="card"><form method="get"><input name="q" value="{{ q }}" placeholder="Search staff name, phone or role"><button>Search</button></form><div class="scroll"><table><thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Monthly Salary</th><th>Status</th><th>Action</th></tr></thead><tbody>{% for s in staff %}<tr><td>{{ s.full_name }}</td><td>{{ s.get_role_display }}</td><td>{{ s.phone|default:"—" }}</td><td>₹{{ s.monthly_salary|floatformat:2 }}</td><td>{{ s.is_active|yesno:"Active,Inactive" }}</td><td><a href="{% url 'staff_edit' s.pk %}">Edit</a></td></tr>{% empty %}<tr><td colspan="6">No staff members yet. Use Add Staff Member to create the first record.</td></tr>{% endfor %}</tbody></table></div></div></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

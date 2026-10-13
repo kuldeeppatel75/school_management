@@ -1,0 +1,396 @@
+
+/* =========================================================
+   SCHOOLPRO — PREMIUM LOGIN PAGE
+   Clean SaaS Design | Responsive | Django Compatible
+   ========================================================= */
+
+:root {
+    --login-primary: #4f46e5;
+    --login-primary-dark: #4338ca;
+    --login-text: #172033;
+    --login-muted: #64748b;
+    --login-border: #e2e8f0;
+    --login-surface: #ffffff;
+    --login-focus: rgba(79, 70, 229, 0.14);
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 32px 18px;
+
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    color: var(--login-text);
+
+    background:
+        radial-gradient(
+            ellipse at 10% 10%,
+            rgba(129, 140, 248, 0.17),
+            transparent 38%
+        ),
+        radial-gradient(
+            ellipse at 90% 90%,
+            rgba(99, 102, 241, 0.12),
+            transparent 35%
+        ),
+        #f5f7ff;
+}
+
+/* ---------- Login Card ---------- */
+
+.card {
+    position: relative;
+    width: min(100%, 440px);
+    margin: auto;
+    padding: 38px;
+
+    background: var(--login-surface);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 24px;
+
+    box-shadow:
+        0 4px 8px rgba(15, 23, 42, 0.02),
+        0 18px 45px rgba(30, 41, 59, 0.07),
+        0 40px 90px rgba(79, 70, 229, 0.06);
+
+    animation: login-appear 0.45s ease both;
+}
+
+/* ---------- School Logo ---------- */
+
+.card .logo {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 25px;
+
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1, #4338ca);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 17px;
+
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.24);
+}
+
+/* ---------- Heading ---------- */
+
+.card h1 {
+    margin: 0 0 10px;
+    color: #111827;
+
+    font-size: clamp(27px, 5vw, 32px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1.1px;
+}
+
+.card .muted {
+    margin: 0 0 25px;
+    color: var(--login-muted);
+
+    font-size: 14px;
+    line-height: 1.75;
+}
+
+/* ---------- Error Message ---------- */
+
+.card .error {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    margin: 0 0 20px;
+    padding: 13px 15px;
+
+    color: #b42318;
+    background: #fff5f4;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.card .error::before {
+    content: "!";
+    flex: 0 0 19px;
+
+    width: 19px;
+    height: 19px;
+    display: grid;
+    place-items: center;
+
+    color: #ffffff;
+    background: #dc2626;
+    border-radius: 50%;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* ---------- Form ---------- */
+
+.card form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.card label {
+    display: block;
+    margin: 17px 0 8px;
+
+    color: #344054;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+}
+
+.card label:first-child {
+    margin-top: 0;
+}
+
+.card input,
+.card select {
+    width: 100%;
+    min-width: 0;
+    height: 49px;
+    padding: 0 14px;
+
+    color: #1e293b;
+    background: #ffffff;
+    border: 1px solid #d8deea;
+    border-radius: 12px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.card input::placeholder {
+    color: #98a2b3;
+}
+
+.card select {
+    cursor: pointer;
+}
+
+.card input:hover,
+.card select:hover {
+    border-color: #a5b4fc;
+}
+
+.card input:focus,
+.card select:focus {
+    border-color: var(--login-primary);
+    box-shadow: 0 0 0 4px var(--login-focus);
+    background: #fdfdff;
+}
+
+/* ---------- Secure Login Button ---------- */
+
+.card form button,
+.card form button[type="submit"] {
+    width: 100%;
+    min-height: 51px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    margin-top: 25px;
+    padding: 13px 18px;
+
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        #5b54ed 0%,
+        #4338ca 100%
+    );
+
+    border: 1px solid rgba(67, 56, 202, 0.35);
+    border-radius: 12px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 750;
+    letter-spacing: 0.15px;
+
+    cursor: pointer;
+
+    box-shadow: 0 6px 14px rgba(79, 70, 229, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+.card form button:hover {
+    filter: brightness(1.06);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(79, 70, 229, 0.25);
+}
+
+.card form button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.16);
+}
+
+.card form button:focus-visible {
+    outline: 3px solid rgba(99, 102, 241, 0.35);
+    outline-offset: 3px;
+}
+
+/* ---------- Bottom Links ---------- */
+
+.card .links {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-top: 24px;
+    padding-top: 21px;
+
+    border-top: 1px solid #eef0f5;
+}
+
+.card .links a {
+    color: var(--login-primary-dark);
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.5;
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.card .links a:hover {
+    color: #312e81;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.card .links a:focus-visible {
+    outline: 2px solid var(--login-primary);
+    outline-offset: 4px;
+    border-radius: 3px;
+}
+
+/* ---------- Optional Back Link ---------- */
+
+.card .back {
+    display: block;
+    margin-top: 20px;
+
+    color: var(--login-primary-dark);
+    font-size: 13px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.card .back:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ---------- Animation ---------- */
+
+@keyframes login-appear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Tablet & Mobile ---------- */
+
+@media (max-width: 520px) {
+    body {
+        padding: 22px 14px;
+    }
+
+    .card {
+        width: 100%;
+        padding: 27px 23px;
+        border-radius: 20px;
+    }
+
+    .card .logo {
+        width: 49px;
+        height: 49px;
+        margin-bottom: 22px;
+        border-radius: 15px;
+        font-size: 23px;
+    }
+
+    .card h1 {
+        font-size: 28px;
+    }
+
+    .card .muted {
+        font-size: 13px;
+        margin-bottom: 23px;
+    }
+
+    .card .links {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .card {
+        padding: 23px 18px;
+    }
+
+    .card .links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ---------- Reduced Motion Accessibility ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

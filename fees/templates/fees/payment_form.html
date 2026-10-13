@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Record Fee Payment | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/fees_payment_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="topbar">
+        <div>
+            <h1>Record Fee Payment</h1>
+            <p class="subtitle">
+                Student ki fee payment details enter karein.
+            </p>
+        </div>
+
+        <a class="btn secondary" href="{% url 'fees:dashboard' %}">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="card">
+
+        {% if form.non_field_errors %}
+            <div class="error-box">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="grid">
+                {% for field in form %}
+                    <div class="field {% if field.name == 'transaction_reference' or field.name == 'remarks' %}full{% endif %}">
+
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}*{% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="help">{{ field.help_text }}</div>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="errors">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if form.errors %}
+                <div class="error-box" style="margin-top: 20px;">
+                    Please correct the highlighted fields and try again.
+                </div>
+            {% endif %}
+
+            <div class="actions">
+                <button type="submit" class="btn primary">
+                    Save Payment &amp; Generate Receipt
+                </button>
+
+                <a href="{% url 'fees:dashboard' %}" class="btn secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

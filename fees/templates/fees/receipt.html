@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Fee Receipt | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/fees_receipt.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="actions">
+    <a href="{% url 'fees:dashboard' %}" class="btn secondary">
+        Dashboard
+    </a>
+
+    <a href="{% url 'fees:payment_history' %}" class="btn secondary">
+        Payment History
+    </a>
+
+    <button type="button" onclick="window.print()" class="btn primary">
+        Print Receipt
+    </button>
+</div>
+
+<main class="receipt">
+
+    <header class="school-header">
+        <h1>SchoolPro</h1>
+        <p>School Fee Payment Receipt</p>
+        <p>Please retain this receipt for your records.</p>
+    </header>
+
+    <div class="receipt-title">Payment Receipt</div>
+
+    <section class="receipt-meta">
+        <div class="meta-item">
+            <span class="label">Receipt Number</span>
+            <span class="value">{{ payment.receipt_number|default:"Pending" }}</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="label">Payment Date</span>
+            <span class="value">{{ payment.payment_date|date:"d M Y" }}</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="label">Admission Number</span>
+            <span class="value">{{ payment.fee_plan.student.admission_number }}</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="label">Student Name</span>
+            <span class="value">{{ payment.fee_plan.student.full_name }}</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="label">Class / Section</span>
+            <span class="value">
+                {{ payment.fee_plan.student_class }} /
+                {{ payment.fee_plan.section }}
+            </span>
+        </div>
+
+        <div class="meta-item">
+            <span class="label">Academic Year</span>
+            <span class="value">{{ payment.fee_plan.academic_year }}</span>
+        </div>
+    </section>
+
+    <h2 class="section-title">Payment Details</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Payment Method</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{ payment.month_for|default:"School Fee" }}</td>
+                <td>{{ payment.get_payment_method_display }}</td>
+                <td class="amount">₹{{ payment.amount|floatformat:2 }}</td>
+            </tr>
+
+            <tr class="amount-row">
+                <td colspan="2">Total Amount Received</td>
+                <td class="amount">₹{{ payment.amount|floatformat:2 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if payment.transaction_reference %}
+        <h2 class="section-title">Transaction Reference</h2>
+        <p>{{ payment.transaction_reference }}</p>
+    {% endif %}
+
+    {% if payment.remarks %}
+        <h2 class="section-title">Remarks</h2>
+        <p>{{ payment.remarks }}</p>
+    {% endif %}
+
+    <p class="note">
+        This receipt records the payment entry shown above. Please contact
+        the school office if any detail needs correction.
+    </p>
+
+    <div class="signatures">
+        <div class="signature">Parent / Student Signature</div>
+        <div class="signature">Authorized Signature</div>
+    </div>
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}
