@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Results | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_student_results.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="wrap"><a href="{% url 'portal' %}">← My Dashboard</a><h1>My Exam Results</h1><p>{{ student.full_name }} · Class {{ student.student_class }}-{{ student.section }}</p><div class="card"><div class="scroll"><table><thead><tr><th>Exam</th><th>Date</th><th>Subject</th><th>Marks</th><th>Percentage</th><th>Remarks</th></tr></thead><tbody>{% for r in results %}<tr><td>{{ r.exam.name }}</td><td>{{ r.exam.exam_date|default:"—" }}</td><td>{{ r.subject }}</td><td>{{ r.marks_obtained }} / {{ r.exam.max_marks }}</td><td>{{ r.percentage|floatformat:1 }}%</td><td>{{ r.remarks|default:"—" }}</td></tr>{% empty %}<tr><td colspan="6">No results published yet.</td></tr>{% endfor %}</tbody></table></div><button onclick="window.print()">Print Results</button></div></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

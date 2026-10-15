@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Salary Summary | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_salary_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="wrap"><a href="{% url 'staff_list' %}">← Staff</a><h1>Monthly Salary Summary</h1><p class="muted">Principal-only view · paid and remaining salary for the selected month.</p><form method="get"><label>Month <input type="month" name="month" value="{{ month }}"></label> <button>Filter</button> <a class="btn" href="{% url 'salary_payment_create' %}">Record Payment</a></form><div class="card"><strong>Total paid: ₹{{ total_paid|floatformat:2 }}</strong> &nbsp; <strong>Total remaining: ₹{{ total_due|floatformat:2 }}</strong><div class="scroll"><table><thead><tr><th>Staff</th><th>Role</th><th>Monthly Salary</th><th>Paid</th><th>Remaining</th></tr></thead><tbody>{% for r in rows %}<tr><td>{{ r.staff.full_name }}</td><td>{{ r.staff.get_role_display }}</td><td>₹{{ r.staff.monthly_salary|floatformat:2 }}</td><td>₹{{ r.paid|floatformat:2 }}</td><td>₹{{ r.due|floatformat:2 }}</td></tr>{% empty %}<tr><td colspan="5">No active staff records.</td></tr>{% endfor %}</tbody></table></div></div></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

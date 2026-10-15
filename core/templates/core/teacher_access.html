@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Teacher Access | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_teacher_access.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="wrap"><a href="{% url 'portal' %}">← Principal Dashboard</a><h1>Teacher Class & Section Access</h1><p class="muted">Teacher ko sirf yahan select kiye gaye class/section aur enabled modules ka access milega.</p>{% if error %}<p class="err">{{ error }}</p>{% endif %}{% for message in messages %}<p>{{ message }}</p>{% endfor %}<section class="card"><h2>Assign / Update Access</h2><form method="post">{% csrf_token %}<div class="grid"><div><label>Teacher</label><select name="staff" required><option value="">Select teacher login</option>{% for t in teachers %}<option value="{{ t.pk }}">{{ t.full_name }} — {{ t.phone }}</option>{% endfor %}</select></div><div><label>Class</label><select name="student_class" required><option value="">Select class</option>{% for c in classes %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select></div><div><label>Section</label><input name="section" maxlength="10" placeholder="A / B / C" required></div></div><div class="checks"><label><input type="checkbox" name="can_attendance" checked> Attendance</label><label><input type="checkbox" name="can_exams"> Exams / results</label><label><input type="checkbox" name="can_fees"> Fee view / payments</label></div><button class="btn">Save Assignment</button></form></section><section class="card"><h2>Current assignments</h2><div class="scroll"><table><thead><tr><th>Teacher</th><th>Class</th><th>Attendance</th><th>Exams</th><th>Fees</th><th>Action</th></tr></thead><tbody>{% for a in assignments %}<tr><td>{{ a.staff.full_name }}</td><td>{{ a.student_class }}-{{ a.section }}</td><td>{{ a.can_attendance|yesno:"Yes,No" }}</td><td>{{ a.can_exams|yesno:"Yes,No" }}</td><td>{{ a.can_fees|yesno:"Yes,No" }}</td><td><form method="post" onsubmit="return confirm('Remove this assignment?')">{% csrf_token %}<input type="hidden" name="action" value="delete"><input type="hidden" name="assignment_id" value="{{ a.pk }}"><button class="btn" style="background:#b91c1c">Remove</button></form></td></tr>{% empty %}<tr><td colspan="6">No teacher access assignments yet.</td></tr>{% endfor %}</tbody></table></div></section></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

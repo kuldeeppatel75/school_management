@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}School Login | SchoolPro{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/pages/core_login.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="card"><div class="logo">S</div><h1>Welcome back</h1><p class="muted">Choose your school role, then sign in with the phone number or account provided by the Principal.</p>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="post">{% csrf_token %}<label for="role">Login as</label><select id="role" name="role" required><option value="STUDENT">Student</option><option value="TEACHER">Teacher</option><option value="PRINCIPAL">Principal</option></select><label for="username">Phone number / Username</label><input id="username" name="username" autocomplete="username" required autofocus><label for="password">Password</label><input id="password" type="password" name="password" autocomplete="current-password" required><button type="submit">Secure Login →</button></form><div class="links"><a href="{% url 'password_reset' %}">Forgot password?</a><a href="{% url 'home' %}">School homepage</a></div></main>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

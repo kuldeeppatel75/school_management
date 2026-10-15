@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Student Attendance Report{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/attendance_student_attendance_report.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Student Attendance Report</h2>
+            <p class="text-muted mb-0">
+                Student ki date-wise attendance history aur summary
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-dark" onclick="window.print()">
+            Print Report
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <form method="get" class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Select Student</label>
+                    <select name="student" class="form-select" required>
+                        <option value="">Choose student</option>
+                        {% for student in students %}
+                            <option value="{{ student.pk }}"
+                                {% if selected_student_id == student.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ student.full_name }} — {{ student.admission_number }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">From Date</label>
+                    <input type="date" name="start_date"
+                           value="{{ start_date }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">To Date</label>
+                    <input type="date" name="end_date"
+                           value="{{ end_date }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Generate
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    {% if selected_student %}
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h4 class="fw-bold">{{ selected_student.full_name }}</h4>
+
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded">
+                            <small class="text-muted">Admission Number</small>
+                            <div class="fw-semibold">
+                                {{ selected_student.admission_number }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded">
+                            <small class="text-muted">Class / Section</small>
+                            <div class="fw-semibold">
+                                {{ selected_student.student_class }}
+                                / {{ selected_student.section }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded">
+                            <small class="text-muted">Report Period</small>
+                            <div class="fw-semibold">
+                                {{ start_date }} to {{ end_date }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Present</div>
+                        <h3 class="text-success fw-bold mb-0">
+                            {{ present_count }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Absent</div>
+                        <h3 class="text-danger fw-bold mb-0">
+                            {{ absent_count }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Leave</div>
+                        <h3 class="text-warning fw-bold mb-0">
+                            {{ leave_count }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Total Marked</div>
+                        <h3 class="fw-bold mb-0">{{ total_marked }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-muted small">Attendance %</div>
+                        <h3 class="text-primary fw-bold mb-0">
+                            {{ percentage }}%
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom">
+                    <h5 class="fw-bold mb-0">Attendance History</h5>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3">S.No.</th>
+                                <th>Attendance Date</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                                <tr>
+                                    <td class="ps-3">{{ forloop.counter }}</td>
+                                    <td>{{ record.attendance_date|date:"d M Y" }}</td>
+                                    <td>
+                                        {% if record.status == "PRESENT" %}
+                                            <span class="badge bg-success">Present</span>
+                                        {% elif record.status == "ABSENT" %}
+                                            <span class="badge bg-danger">Absent</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Leave</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ record.remarks|default:"—" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">
+                                        Is date range mein attendance records nahi mile.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-muted small mt-3">
+            Note: Percentage Present ÷ Total Marked Records × 100 se calculate hoti hai.
+            Unmarked dates ko Absent nahi maana jata.
+        </p>
+
+    {% else %}
+        <div class="alert alert-info">
+            Student select karke Generate par click karo. Uski attendance report yahan dikhegi.
+        </div>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

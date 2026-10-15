@@ -1,0 +1,120 @@
+
+
+* { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 28px 16px;
+            background: #f4f7fb;
+            color: #172033;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container { max-width: 1250px; margin: auto; }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        h1 { margin: 0 0 8px; font-size: 28px; }
+
+        .subtitle { margin: 0; color: #64748b; line-height: 1.5; }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .primary { background: #2563eb; color: #fff; }
+        .secondary { background: #e2e8f0; color: #1e293b; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 11px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+            background: #fff;
+        }
+
+        .toolbar input { flex: 1; min-width: 200px; }
+
+        .table-wrap { width: 100%; overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .amount { font-weight: bold; color: #15803d; }
+
+        .receipt {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px 12px;
+            color: #64748b;
+        }
+
+        .summary {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 23px; }
+            .card { padding: 14px; }
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .topbar .actions, .toolbar { display: none !important; }
+            .card { border: 0; box-shadow: none; padding: 0; }
+        }

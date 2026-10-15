@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Manage Homepage | Ramnarayan Yadav School{% endblock %}
+{% block meta_description %}Principal controls for the school homepage hero and student achievements.{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/homepage-manage.css' %}">
+{% endblock %}
+{% block content %}
+<div class="manage-page">
+  <header class="manage-header"><a href="{% url 'home' %}" class="back-link">← View public website</a><span class="manage-kicker">PRINCIPAL CONTROL PANEL</span><h1>Homepage appearance</h1><p>Update the hero image and celebrate student achievements. Changes appear on the public homepage after saving.</p></header>
+  <section class="manage-card"><div class="manage-card-heading"><div><span class="manage-kicker">01 / HERO SECTION</span><h2>School hero content</h2></div><span class="manage-pill">Public homepage</span></div>
+    <form method="post" enctype="multipart/form-data" class="manage-form">{% csrf_token %}<input type="hidden" name="form_action" value="save_hero">
+      {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}
+      {% if homepage.hero_image %}<div class="current-image"><span>Current hero image</span><img src="{{ homepage.hero_image.url }}" alt="Current school hero image"></div>{% endif %}
+      <button class="manage-primary" type="submit">Save hero changes</button>
+    </form>
+  </section>
+  <section class="manage-card"><div class="manage-card-heading"><div><span class="manage-kicker">02 / STUDENT ACHIEVEMENTS</span><h2>Feature a student</h2></div><span class="manage-pill">Photo + caption</span></div>
+    <p class="manage-help">Add a student's photo and a caption such as “Class 10 topper — 94%”. Only published entries appear on the public homepage. Please get parent/guardian consent before publishing a minor's photo.</p>
+    <form method="post" enctype="multipart/form-data" class="manage-form">{% csrf_token %}<input type="hidden" name="form_action" value="add_highlight">
+      {% for field in highlight_form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}
+      <button class="manage-primary" type="submit">Add student achievement</button>
+    </form>
+    {% if highlights %}<div class="highlight-list"><h3>Existing student highlights</h3>{% for item in highlights %}<article class="highlight-row"><img src="{{ item.photo.url }}" alt=""><div class="highlight-info"><strong>{{ item.student_name }}</strong><span>{{ item.caption }}</span><small>{% if item.is_published %}Published on homepage{% else %}Hidden from homepage{% endif %}</small></div><div class="highlight-actions"><form method="post">{% csrf_token %}<input type="hidden" name="highlight_id" value="{{ item.pk }}"><input type="hidden" name="form_action" value="toggle_highlight"><button class="manage-secondary" type="submit">{% if item.is_published %}Hide{% else %}Publish{% endif %}</button></form><form method="post" onsubmit="return confirm('Delete this student highlight?');">{% csrf_token %}<input type="hidden" name="highlight_id" value="{{ item.pk }}"><input type="hidden" name="form_action" value="delete_highlight"><button class="manage-danger" type="submit">Delete</button></form></div></article>{% endfor %}</div>{% endif %}
+  </section>
+</div>
+{% endblock %}

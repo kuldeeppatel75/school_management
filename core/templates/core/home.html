@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ramnarayan Yadav School, Khirkia | Official School Website{% endblock %}
+{% block meta_description %}Official website of Ramnarayan Yadav School, Khirkia. Explore school information and access the student portal for attendance, fees, and academic results.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/core_home.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="navbar">
+<a href="{% url 'home' %}" class="brand"><span class="logo">S</span><span>{{ school_name }}</span></a>
+<nav><a href="#home">Home</a><a href="#features">Features</a><a href="#about">About</a></nav>
+<div class="nav-actions"><button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">☾ <span>Dark mode</span></button><a href="{% url 'login' %}" class="login-btn">School Login ↗</a></div>
+</header>
+<main id="main-content">
+{% if can_manage_homepage %}<div class="principal-home-tools"><a href="{% url 'homepage_manage' %}">Manage hero & student highlights ↗</a></div>{% endif %}
+<section class="hero" id="home"{% if homepage and homepage.hero_image %} style="--hero-image: url('{{ homepage.hero_image.url|escapejs }}')"{% endif %}>
+<div class="hero-content">
+<span class="eyebrow">WELCOME TO {{ school_name|upper }}</span>
+<h1>{{ homepage.hero_title|default:"Ramnarayan Yadav School, Khirkia" }}<br><span>{{ homepage.hero_subtitle|default:"A better school day." }}</span></h1>
+<p>{{ homepage.hero_description|default:"Student records, attendance, fee tracking and academic results — organized in one secure school management portal." }}</p>
+<div class="hero-actions"><a href="{% url 'login' %}" class="primary-btn">Login to your portal ↗</a><a href="#features" class="secondary-btn">Explore features</a></div>
+<div class="trust-row"><span>✓ Student-first</span><span>✓ Role-based access</span><span>✓ Clear records</span></div>
+</div>
+<div class="dashboard-preview">
+<div class="preview-top"><div><small>SCHOOL OVERVIEW</small><h3>Our School</h3></div><span class="status">● Portal</span></div>
+<div class="stat-grid"><div class="stat-card"><span>Active Students</span><strong>{{ total_students }}</strong><small>Currently enrolled</small></div><div class="stat-card"><span>Access</span><strong>3</strong><small>Principal · Teacher · Student</small></div></div>
+<div class="preview-note"><span class="note-icon">✓</span><div><strong>One school. Connected records.</strong><p>Sign in to view your permitted dashboard.</p></div></div>
+</div>
+</section>
+<section class="features section" id="features"><div class="section-heading"><span class="eyebrow">SCHOOL MANAGEMENT</span><h2>Everything in one place.</h2><p>Secure access for school leadership, teachers and students.</p></div>
+<div class="feature-grid">
+<article class="feature-card"><span class="feature-icon">01</span><h3>Student Management</h3><p>Admission records, classes, sections and contact details.</p></article>
+<article class="feature-card"><span class="feature-icon">02</span><h3>Attendance</h3><p>Daily attendance with date-wise reports.</p></article>
+<article class="feature-card"><span class="feature-icon">03</span><h3>Fees & Receipts</h3><p>Fee plans, payments, receipts and outstanding balances.</p></article>
+<article class="feature-card"><span class="feature-icon">04</span><h3>Staff & Salary</h3><p>Staff records and month-wise salary tracking.</p></article>
+<article class="feature-card"><span class="feature-icon">05</span><h3>Transport</h3><p>Student route and monthly transport charge records.</p></article>
+<article class="feature-card"><span class="feature-icon">06</span><h3>Exams & Results</h3><p>Record exam marks and let students view their own results.</p></article>
+</div></section>
+{% if student_highlights %}
+<section class="student-achievements section" id="achievements"><div class="section-heading"><span class="eyebrow">STUDENT ACHIEVEMENTS</span><h2>Celebrating our students.</h2><p>Recognizing effort, progress and outstanding achievement.</p></div><div class="achievement-grid">{% for item in student_highlights %}<article class="achievement-card"><img src="{{ item.photo.url }}" alt="Photo of {{ item.student_name|escape }}" loading="lazy"><div class="achievement-copy"><h3>{{ item.student_name }}</h3><p>{{ item.caption }}</p></div></article>{% endfor %}</div></section>
+{% endif %}
+<section class="about section" id="about"><span class="eyebrow">SCHOOLPRO PORTAL</span><h2>Simple for everyone.<br><span>Controlled by the Principal.</span></h2><p>Ramnarayan Yadav School, Khirkia brings school operations into one organized place. Principal accounts manage school records, teachers work with assigned academic tasks, and students can view their own records after signing in.</p><a href="{% url 'login' %}" class="primary-btn">Go to Login ↗</a></section>
+</main>
+<footer><a href="{% url 'home' %}" class="brand"><span class="logo">S</span><span>{{ school_name }}</span></a><p>© {% now "Y" %} {{ school_name }} · School management portal</p></footer>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/main.js' %}"></script>
+{% endblock %}
